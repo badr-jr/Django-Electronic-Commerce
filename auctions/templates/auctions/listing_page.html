@@ -1,0 +1,100 @@
+{% extends "auctions/layout.html"%}
+
+{% block title %}
+{{listing.title}}
+{% endblock %}
+
+{% block header %}
+{% endblock %}
+
+{% block body %}
+<div class="container">
+    <div class="row">
+        {% if user == listing.winner and listing.winner != listing.listing_owner %}
+        <div class="alert alert-success alerts" role="alert">
+            <h4 class="alert-heading">Congratulations!</h4>
+            <p>You have won this auction.</p>
+            <hr>
+            <p class="mb-0">This auction is currently closed.</p>
+        </div>
+        {% elif listing.winner != NULL %}
+        <div class="alert alert-info alerts" role="alert">
+            <h4 class="alert-heading">Closed!</h4>
+            <p>You have not won this auction.</p>
+            <hr>
+            <p class="mb-0">This auction is currently closed.</p>
+        </div>
+        {% else %}
+        <div class="col-lg-4">
+            <img id="listing_image" src={{listing.image}}>
+        </div>
+        <div class="col-lg-6">
+            <form action="{% url 'show_listing' lis_id=listing.id %}" method="POST">
+                {% csrf_token %}
+                <h2>{{listing.title}}</h2>
+                <p>{{listing.description}}</p>
+                <hr>
+                <label>Price</label>
+                <input type="text" disabled value={{listing.start_bid}} class="price_bid">
+                <label id="bid_label">Your Bid</label>
+                <input type="number" name="bid_inp" value={{listing.start_bid}} class="price_bid">
+                <button type="submit" name="bid" class="btn btn-info btn-sm bid_btn">Place Bid</button>
+                <br><br>
+                <strong>Category:</strong>
+                <label>{{listing.category}}</label>
+                <strong id="bids_label">Current bids on this item:</strong>
+                <label>
+                    <h6 id="bids_cnt">{{bids_cnt}}</h6>
+                </label>
+                {% if state == "error" %}
+                <div class="alert alert-danger" role="alert">
+                    You must enter higher bid than the current bid ({{listing.start_bid}})
+                </div>
+                <hr>
+                {% endif %}
+                {% if watchlisted == None %}
+                <button type="submit" name="add_watchlist" class="btn btn-dark btn-sm">Add to Watchlist</button>
+                {% else %}
+                <button type="submit" name="remove_watchlist" class="btn btn-dark btn-sm">Remove from Watchlist</button>
+                {% endif %}
+                {% if user == listing.listing_owner %}
+                <button type="submit" name="close_listing" class="btn btn-danger btn-sm" id="close_btn">Close
+                    Listing</button>
+                {% endif %}
+                <br><br>
+                <strong>Listed by:</strong>
+                <label>{{listing.listing_owner}}</label>
+            </form>
+        </div>
+        {% endif %}
+    </div>
+    <div class="row">
+        <div class="col-lg-6 mt-4">
+            <h2>Comments</h2>
+            {% for comment in comments %}
+            <div class="col-lg-12 comment mt-4 text-justify float-left">
+                <img src="https://i.imgur.com/CFpa3nK.jpg" alt="" class="rounded-circle" width="40" height="40">
+                <strong>{{comment.commenator}}</strong><br>
+                <p>{{comment.comment}}</p>
+                <hr>
+            </div>
+
+            {% endfor %}
+        </div>
+        {% if listing.winner == NULL %}
+        <div class="col-lg-6 mt-4">
+            <form action="{% url 'show_listing' lis_id=listing.id %}" method="POST">
+                {% csrf_token %}
+                <div class="form-group">
+                    <h4>Leave a comment</h4>
+                    <textarea name="comment" cols="30" rows="5" class="form-control"></textarea>
+                </div>
+                <div class="form-group">
+                    <button type="submit" name="comment_btn" class="btn btn-primary btn-sm">Post Comment</button>
+                </div>
+            </form>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

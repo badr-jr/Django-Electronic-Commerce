@@ -1,0 +1,23 @@
+{% extends "auctions/layout.html" %}
+{% block header %}
+Categories
+{% endblock %}
+
+{% block title %}
+Categories
+{% endblock %}
+
+{% block body %}
+<div class="card-header bg-primary text-white text-uppercase">Categories</div>
+<ul class="list-group categ_ul">
+    {% for category in categories %}
+    <form method="POST" action="{% url 'category' categ=category.id %}">
+        {% csrf_token %}
+        <li class="list-group-item"><button type="submit" class="btn btn-light"  style="width: 100%;">{{category.category}}</button></li>
+    </form>
+    {% endfor %}
+    
+    
+</ul>
+</div>
+{% endblock %}

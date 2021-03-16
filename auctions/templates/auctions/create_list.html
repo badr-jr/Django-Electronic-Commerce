@@ -1,0 +1,43 @@
+{% extends "auctions/layout.html" %}
+
+{% block title %}
+Create Listing
+{% endblock %}
+
+{% block header %}
+Create Listing
+{% endblock %}
+
+{% block body%}
+<form method="POST" enctype="multipart/form-data" action="{% url 'create_list' %}">
+    {% csrf_token %}
+    <div class="form-inline">
+        <div class="form-group col-6">
+            {{form.listing_title.label}}
+            &nbsp;
+            {{form.listing_title}}
+        </div>
+        <div class="form-group col-6">
+            {{form.listing_start_bid.label}}
+            &nbsp;
+            {{form.listing_start_bid}}
+        </div>
+        <div class="form-group col-6 image_cat_descr">
+            {{form.listing_image.label}}
+            &nbsp;
+            {{form.listing_image}}
+        </div>
+        <div class="form-group col-6 image_cat_descr">
+            {{form.listing_category.label}}
+            &nbsp;
+            {{form.listing_category}}
+        </div>
+        <div class="form-group col-12 image_cat_descr">
+            {{form.listing_description.label}}
+            &nbsp;
+            {{form.listing_description}}
+        </div>
+    </div>
+    <button type="submit" class="btn btn-primary save_btn">Save</button>
+</form>
+{% endblock %}

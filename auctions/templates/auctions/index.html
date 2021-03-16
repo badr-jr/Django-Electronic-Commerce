@@ -1,0 +1,53 @@
+{% extends "auctions/layout.html" %}
+
+{% block title %}
+{{title}}
+{% endblock %}
+
+{% block header %}
+{{title}}
+{% endblock %}
+
+{% block body %}
+<h2>Active Listings</h2>
+{% for listing in listings %}
+{% if listing.winner == NULL %}
+<div class="card offset-3" id="list">
+  <a href="{% url 'show_listing' lis_id=listing.id %}"><img class="card-img-top" src={{listing.image}}
+      alt="Card image cap"></a>
+  <div class="card-body">
+    <a id="title" href="{% url 'show_listing' lis_id=listing.id %}">
+      <h5 class="card-title">{{listing.title}}</h5>
+    </a>
+    <p class="card-text">{{listing.description}}</p>
+    <strong class="card-text">{{listing.start_bid}} $</strong>
+  </div>
+</div>
+{% endif %}
+{% endfor %}
+<hr>
+<h2>Not Active Listings</h2>
+{% for listing in listings %}
+{% if listing.winner != NULL %}
+<div class="card offset-3" id="list">
+  <div class="alert alert-danger" role="alert">
+    Closed Item.
+  </div>
+  <a href="{% url 'show_listing' lis_id=listing.id %}"><img class="card-img-top" src={{listing.image}}
+    alt="Card image cap"></a>
+  <div class="card-body">
+    <a id="title" href="{% url 'show_listing' lis_id=listing.id %}">
+      <h5 class="card-title">{{listing.title}}</h5>
+    </a>
+    <p class="card-text">{{listing.description}}</p>
+    <strong class="card-text">{{listing.start_bid}} $</strong>
+  </div>
+  {% if user == listing.winner and listing.listing_owner != listing.winner %}
+  <div class="alert alert-success" role="alert">
+    Congratulations, You have won this auciton.
+  </div>
+  {% endif %}
+</div>
+{% endif %}
+{% endfor %}
+{% endblock %}
